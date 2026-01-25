@@ -213,11 +213,7 @@ contract ERC20Test is DSTestPlus {
     /*     token.permit(owner, address(0xCAFE), 1e18, block.timestamp, v, r, s); */
     /* } */
 
-    function testMetadata(
-        string calldata name,
-        string calldata symbol,
-        uint8 decimals
-    ) public {
+    function testMetadata(string calldata name, string calldata symbol, uint8 decimals) public {
         MockERC20 tkn = new MockERC20(name, symbol, decimals);
         assertEq(tkn.name(), name);
         assertEq(tkn.symbol(), symbol);
@@ -265,11 +261,7 @@ contract ERC20Test is DSTestPlus {
         }
     }
 
-    function testTransferFrom(
-        address to,
-        uint256 approval,
-        uint256 amount
-    ) public {
+    function testTransferFrom(address to, uint256 approval, uint256 amount) public {
         amount = bound(amount, 0, approval);
 
         address from = address(0xABCD);
@@ -333,11 +325,7 @@ contract ERC20Test is DSTestPlus {
     /*     token.burn(to, burnAmount); */
     /* } */
 
-    function test_RevertWhen_TransferInsufficientBalance(
-        address to,
-        uint256 mintAmount,
-        uint256 sendAmount
-    ) public {
+    function test_RevertWhen_TransferInsufficientBalance(address to, uint256 mintAmount, uint256 sendAmount) public {
         hevm.assume(mintAmount < type(uint256).max);
         sendAmount = bound(sendAmount, mintAmount + 1, type(uint256).max);
 
@@ -346,11 +334,7 @@ contract ERC20Test is DSTestPlus {
         token.transfer(to, sendAmount);
     }
 
-    function test_RevertWhen_TransferFromInsufficientAllowance(
-        address to,
-        uint256 approval,
-        uint256 amount
-    ) public {
+    function test_RevertWhen_TransferFromInsufficientAllowance(address to, uint256 approval, uint256 amount) public {
         hevm.assume(approval < type(uint256).max);
         amount = bound(amount, approval + 1, type(uint256).max);
 
@@ -365,11 +349,9 @@ contract ERC20Test is DSTestPlus {
         token.transferFrom(from, to, amount);
     }
 
-    function test_RevertWhen_TransferFromInsufficientBalance(
-        address to,
-        uint256 mintAmount,
-        uint256 sendAmount
-    ) public {
+    function test_RevertWhen_TransferFromInsufficientBalance(address to, uint256 mintAmount, uint256 sendAmount)
+        public
+    {
         hevm.assume(mintAmount < type(uint256).max);
         sendAmount = bound(sendAmount, mintAmount + 1, type(uint256).max);
 
@@ -526,11 +508,7 @@ contract BalanceSum {
         token.approve(to, amount);
     }
 
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) public {
+    function transferFrom(address from, address to, uint256 amount) public {
         token.transferFrom(from, to, amount);
     }
 
