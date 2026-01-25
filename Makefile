@@ -8,4 +8,4 @@ lint:
 	pnpm lint
 
 test:
-	forge test -vvv
+	forge test -vv

@@ -27,17 +27,26 @@ constructor (string memory _name, string memory _symbol, uint8 _decimals) {
 
 function _transferFrom (address from, address to, uint256 amount, address spender) internal returns (bool) {
 
-  uint256 allowed = allowance [from] [spender];
+  // only check allowance if not transferring own tokens
+  if (from != spender) {
 
-  if (amount > allowed) {
-    revert ("insufficient allowance");
+    uint256 allowed = allowance [from] [spender];
+
+    if (amount > allowed) {
+      revert ("insufficient allowance");
+    }
+
+    // Don't decrease infinite allowance
+    if (allowed != type(uint256).max) {
+      allowance[from][spender] -= amount;
+    }
+
   }
 
   if (amount > balanceOf [from]) {
     revert ("insufficient balance");
   }
 
-  allowance [from] [to] -= amount;
   balanceOf [from] -= amount;
   balanceOf [to] += amount;
 
@@ -64,6 +73,16 @@ function _mint (address to, uint256 amount) internal {
   if (msg.sender != owner) {
     revert ("not an owner address");
   }
+
+  /* // Check for totalSupply overflow */
+  /* if (totalSupply + amount < totalSupply) { */
+  /*   revert("totalSupply overflow"); */
+  /* } */
+
+  /* // Check for balance overflow */
+  /* if (balanceOf[to] + amount < balanceOf[to]) { */
+  /*   revert("balance overflow"); */
+  /* } */
 
   totalSupply += amount;
   balanceOf [to] += amount;

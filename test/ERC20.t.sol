@@ -338,6 +338,7 @@ contract ERC20Test is DSTestPlus {
         uint256 mintAmount,
         uint256 sendAmount
     ) public {
+        hevm.assume(mintAmount < type(uint256).max);
         sendAmount = bound(sendAmount, mintAmount + 1, type(uint256).max);
 
         token.mint(address(this), mintAmount);
@@ -350,6 +351,7 @@ contract ERC20Test is DSTestPlus {
         uint256 approval,
         uint256 amount
     ) public {
+        hevm.assume(approval < type(uint256).max);
         amount = bound(amount, approval + 1, type(uint256).max);
 
         address from = address(0xABCD);
@@ -368,6 +370,7 @@ contract ERC20Test is DSTestPlus {
         uint256 mintAmount,
         uint256 sendAmount
     ) public {
+        hevm.assume(mintAmount < type(uint256).max);
         sendAmount = bound(sendAmount, mintAmount + 1, type(uint256).max);
 
         address from = address(0xABCD);
