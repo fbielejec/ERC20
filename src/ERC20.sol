@@ -25,11 +25,11 @@ constructor (string memory _name, string memory _symbol, uint8 _decimals) {
    owner = msg.sender;
 }
 
-function transferFrom (address from, address to, uint256 amount) external returns (bool) {
+function _transferFrom (address from, address to, uint256 amount, address spender) internal returns (bool) {
 
   // Only check allowance if not transferring own tokens
-  if (from != msg.sender) {
-    uint256 currentAllowance = allowance[from][msg.sender];
+  if (from != spender) {
+    uint256 currentAllowance = allowance[from][spender];
 
     if (amount > currentAllowance) {
       revert ("insufficient allowance");
@@ -37,7 +37,7 @@ function transferFrom (address from, address to, uint256 amount) external return
 
     // Don't decrease infinite allowance to save gas
     if (currentAllowance != type(uint256).max) {
-      allowance[from][msg.sender] -= amount;
+      allowance[from][spender] -= amount;
     }
   }
 
@@ -48,30 +48,16 @@ function transferFrom (address from, address to, uint256 amount) external return
   balanceOf[from] -= amount;
   balanceOf[to] += amount;
 
-  /* uint256 allowed = allowance [from] [msg.sender]; */
-
-  /* if (amount > allowed) { */
-  /*   revert ("insufficient allowance"); */
-  /* } */
-
-  /* if (amount > balanceOf [from]) { */
-  /*   revert ("insufficient balance"); */
-  /* } */
-
-  /* allowance [from] [to] -= amount; */
-  /* balanceOf [from] -= amount; */
-  /* balanceOf [to] += amount; */
-
-  /* emit Transfer (from, to, amount); */
-  /* return true; */
-
-
   emit Transfer(from, to, amount);
   return true;
 }
 
+function transferFrom (address from, address to, uint256 amount) external returns (bool) {
+  return _transferFrom(from, to, amount, msg.sender);
+}
+
 function transfer (address to, uint256 amount ) external returns (bool) {
-  return transferFrom (msg.sender, to, amount);
+  return _transferFrom(msg.sender, to, amount, msg.sender);
 }
 
 
